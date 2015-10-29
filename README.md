@@ -1,11 +1,11 @@
 # webparrot
 This is a light weight webserver mock application written in spring boot. Using this application you can mock headers,body and status code to show up in the response. The mock data will be stored in JVM memory so every restart gets your data refreshed.
 
-Java version this is implemented on 1.8
+Supported Java Versions : 1.7 and higher.
 
 Supported methods types for web parrot are POST,PUT,DELETE,GET,HEAD.
 
-<h3>Deploying:</h3>
+<h3>Deploying and Running:</h3>
 
 1)Clone this project into your local directory.
 
@@ -15,6 +15,14 @@ Supported methods types for web parrot are POST,PUT,DELETE,GET,HEAD.
 ```
 mvn clean spring-boot:run
 ```
+<h5>OR</h5>
+
+If you dont want to clone the project everytime and run it you can execute below commands.
+```
+mvn clean package
+java -jar target/webparrot-0.0.1-SNAPSHOT.jar
+```
+The second apporach we are using the power of spring boot to create an executable jar file.
 4)The application is available on localhost:8080
 
 
