@@ -23,6 +23,7 @@ mvn clean package
 java -jar target/webparrot-0.0.1-SNAPSHOT.jar
 ```
 The second apporach we are using the power of spring boot to create an executable jar file.
+
 4)The application is available on localhost:8080
 
 
