@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,36 +37,36 @@ public class WebParrotResource {
 	private WebParrotRepository repository;
 
 	@GET
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces("*/*")
 	public Response getMockData(@PathParam("paths") String path,
 			@Context HttpServletResponse servletResponse) {
 		return responseBuilder.buildResponse(path, servletResponse, 200);
 	}
 
 	@DELETE
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces("*/*")
 	public Response deleteMockData(@PathParam("paths") String path,
 			@Context HttpServletResponse servletResponse) {
 		return responseBuilder.buildResponse(path, servletResponse, 204);
 	}
 
 	@PUT
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces("*/*")
 	public Response putMockData(@PathParam("paths") String path,
 			@Context HttpServletResponse servletResponse) {
 		return responseBuilder.buildResponse(path, servletResponse, 200);
 	}
 
 	@HEAD
-	@Produces({ MediaType.TEXT_PLAIN })
+	@Produces("*/*")
 	public Response headMockData(@PathParam("paths") String path,
 			@Context HttpServletResponse servletResponse) {
 		return responseBuilder.buildResponse(path, servletResponse, 200);
 	}
 
 	@POST
-	@Produces({ MediaType.TEXT_PLAIN })
-	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces("*/*")
+	@Consumes("*/*")
 	public Response insertMockData(@PathParam("paths") String path,
 			String mock, @Context HttpHeaders headers,
 			@Context HttpServletResponse servletResponse) {
@@ -77,14 +76,20 @@ public class WebParrotResource {
 			persistenceObject.setResponse(mock);
 
 			Map<String, String> headersMap = new HashMap<String, String>();
+			String CONTENT_TYPE = null; 
+			
 			for (Entry<String, List<String>> header : headers.getRequestHeaders().entrySet()) {
 				if (header.getKey().matches("resp-.*")) {
 					headersMap.put(header.getKey().replaceAll("resp-", ""),header.getValue().get(0));
 				}
+				
+				CONTENT_TYPE = (header.getKey().toLowerCase().matches("content-type"))?header.getValue().get(0):"text/plain";
 			}
+			
+			headersMap.put("Content-Type", CONTENT_TYPE);
 			persistenceObject.setHeaders(headersMap);
 			persistenceObject.setURI(path);
-			MockObject savedObject = repository.save(persistenceObject);
+			repository.save(persistenceObject);
 			return Response.noContent().build();
 		} else {
 			return responseBuilder.buildResponse(path, servletResponse, 201);
